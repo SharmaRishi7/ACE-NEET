@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACE-NEET Question Upload System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 ACE-NEET Question Upload System</h1>
+            <p>Upload questions with OCR and PDF support</p>
+        </header>
+
+        <main>
+            <!-- Tab Navigation -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="image">Image Upload</button>
+                <button class="tab-btn" data-tab="pdf">PDF Upload</button>
+                <button class="tab-btn" data-tab="manual">Manual Entry</button>
+                <button class="tab-btn" data-tab="library">Question Library</button>
+            </div>
+
+            <!-- Image Tab -->
+            <div id="image" class="tab-content active">
+                <h2>Upload Question Image</h2>
+                <div class="upload-section">
+                    <div class="upload-area" id="imageUploadArea">
+                        <p>📷 Drag and drop images here or click to select</p>
+                        <small>Supports: JPG, PNG, WebP (Max 10MB)</small>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="options">
+                    <label for="imageLang">Language:</label>
+                    <select id="imageLang">
+                        <option value="english">English</option>
+                        <option value="hindi">हिन्दी (Hindi)</option>
+                    </select>
+
+                    <button class="btn btn-primary" id="extractImageBtn" style="display: none;">Extract Text</button>
+                </div>
+
+                <div id="imagePreview" style="display: none;">
+                    <h3>Image Preview</h3>
+                    <img id="previewImage" src="" alt="Preview">
+                </div>
+
+                <div id="imageExtracted" style="display: none;">
+                    <h3>Extracted Content</h3>
+                    <div id="imageExtractedContent"></div>
+                </div>
+            </div>
+
+            <!-- PDF Tab -->
+            <div id="pdf" class="tab-content">
+                <h2>Upload PDF</h2>
+                <div class="upload-section">
+                    <div class="upload-area" id="pdfUploadArea">
+                        <p>📄 Drag and drop PDF here or click to select</p>
+                        <small>Max size: 50MB</small>
+                        <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="options">
+                    <label for="pdfLang">Language:</label>
+                    <select id="pdfLang">
+                        <option value="english">English</option>
+                        <option value="hindi">हिन्दी (Hindi)</option>
+                    </select>
+
+                    <button class="btn btn-primary" id="extractPdfBtn" style="display: none;">Extract Questions</button>
+                </div>
+
+                <div id="pdfExtracted" style="display: none;">
+                    <h3>Extracted Questions</h3>
+                    <div id="pdfExtractedContent"></div>
+                </div>
+            </div>
+
+            <!-- Manual Entry Tab -->
+            <div id="manual" class="tab-content">
+                <h2>Manual Question Entry</h2>
+                <form id="manualForm">
+                    <div class="form-group">
+                        <label for="manualQuestion">Question Text:</label>
+                        <textarea id="manualQuestion" required placeholder="Enter the question..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Options:</label>
+                        <div class="options-grid">
+                            <div>
+                                <label>A)</label>
+                                <input type="text" id="optionA" required placeholder="Option A">
+                            </div>
+                            <div>
+                                <label>B)</label>
+                                <input type="text" id="optionB" required placeholder="Option B">
+                            </div>
+                            <div>
+                                <label>C)</label>
+                                <input type="text" id="optionC" required placeholder="Option C">
+                            </div>
+                            <div>
+                                <label>D)</label>
+                                <input type="text" id="optionD" required placeholder="Option D">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correctAnswer">Correct Answer:</label>
+                        <select id="correctAnswer" required>
+                            <option value="">Select...</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="manualSubject">Subject:</label>
+                            <select id="manualSubject">
+                                <option value="Biology">Biology</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Physics">Physics</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="manualDifficulty">Difficulty:</label>
+                            <select id="manualDifficulty">
+                                <option value="Easy">Easy</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="manualLanguage">Language:</label>
+                            <select id="manualLanguage">
+                                <option value="English">English</option>
+                                <option value="Hindi">Hindi</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="manualChapter">Chapter:</label>
+                        <input type="text" id="manualChapter" placeholder="e.g., Cell Structure">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="manualExplanation">Explanation (Optional):</label>
+                        <textarea id="manualExplanation" placeholder="Explain the answer..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Question</button>
+                </form>
+            </div>
+
+            <!-- Library Tab -->
+            <div id="library" class="tab-content">
+                <h2>Question Library</h2>
+                <div class="filters">
+                    <input type="text" id="searchQuestions" placeholder="Search questions...">
+                    <select id="filterSubject">
+                        <option value="">All Subjects</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Physics">Physics</option>
+                    </select>
+                    <select id="filterDifficulty">
+                        <option value="">All Difficulties</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+                    </select>
+                </div>
+
+                <div id="questionsList" class="questions-grid">
+                    <p>No questions yet.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal for editing OCR results -->
+        <div id="editModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Edit Extracted Question</h2>
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="editQuestion">Question:</label>
+                        <textarea id="editQuestion" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Options:</label>
+                        <div class="options-grid">
+                            <div>
+                                <label>A)</label>
+                                <input type="text" id="editOptionA" required>
+                            </div>
+                            <div>
+                                <label>B)</label>
+                                <input type="text" id="editOptionB" required>
+                            </div>
+                            <div>
+                                <label>C)</label>
+                                <input type="text" id="editOptionC" required>
+                            </div>
+                            <div>
+                                <label>D)</label>
+                                <input type="text" id="editOptionD" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCorrectAnswer">Correct Answer:</label>
+                        <select id="editCorrectAnswer" required>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSubject">Subject:</label>
+                            <select id="editSubject">
+                                <option value="Biology">Biology</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Physics">Physics</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editDifficulty">Difficulty:</label>
+                            <select id="editDifficulty">
+                                <option value="Easy">Easy</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Question</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p id="loadingText">Processing...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
